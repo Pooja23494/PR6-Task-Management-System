@@ -22,7 +22,7 @@ const Header = () => {
                                 <label>Navigation</label>
                             </li>
                             <li className="nxl-item nxl-hasmenu">
-                                <Link to="javascript:void(0);" className="nxl-link">
+                                <Link to="/" className="nxl-link">
                                     <span className="nxl-micon"><i className="feather-airplay" /></span>
                                     <span className="nxl-mtext">Dashboards</span><span className="nxl-arrow"><i className="feather-chevron-right" /></span>
                                 </Link>

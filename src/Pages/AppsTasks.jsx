@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import Bootstrap from 'bootstrap/dist/js/bootstrap.min.js'
+import 'bootstrap/dist/js/bootstrap.min.js'
+import { Modal } from 'bootstrap'
 
 const AppsTasks = () => {
 
     const [task, setTask] = useState({});
     const [list, setList] = useState([]);
+
+    useEffect(() => {
+        let oldList = JSON.parse(localStorage.getItem('task')) || [];
+        setList(oldList);
+    }, [list]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,7 +23,15 @@ const AppsTasks = () => {
         setList(newList);
         localStorage.setItem('task', JSON.stringify(newList));
         setTask({});
+        const modalElement = document.getElementById('addNewTasks');
+        const modalInstance = Modal.getInstance(modalElement);
+        modalInstance.hide();
     }
+
+    const handleReset = () => {
+        setTask({})
+    }
+
     return (
         <>
             <div>
@@ -445,29 +459,28 @@ const AppsTasks = () => {
                                             <h5 className="mb-0">Recently Assigned</h5>
                                         </a>
                                         <div className="card-body collapse show" id="tasks_collapse_1">
-                                            {
-                                                list.map((value, index) => {
-
-                                                    return (
-                                                        <ul className="list-unstyled mb-0">
-                                                            <li key={id} className="single-task-list p-3 mb-3 border border-dashed rounded-3">
+                                            <ul className="list-unstyled mb-0">
+                                                {
+                                                    list.map((value) => {
+                                                        return (
+                                                            <li key={value.id} className="single-task-list p-3 mb-3 border border-dashed rounded-3">
                                                                 <div className="d-flex align-items-center justify-content-between">
                                                                     <div className="d-flex align-items-center gap-3 me-3">
                                                                         <div className="custom-control custom-checkbox me-2">
-                                                                            <input type="checkbox" className="custom-control-input" id="customCheckTask1" data-checked-action="task-action" />
+                                                                            <input type="checkbox" className="custom-control-input" id={`customCheckTask${value.id}`} data-checked-action="task-action" />
                                                                             <label className="custom-control-label c-pointer" htmlFor="customCheckTask1" />
                                                                         </div>
                                                                         <div className="d-flex align-items-center gap-3">
                                                                             <div className="lh-base"><i className="feather-star" /></div>
                                                                             <a href="javascript:void(0);" className="single-task-list-link" data-bs-toggle="offcanvas" data-bs-target="#tasksDetailsOffcanvas">
-                                                                                <div className="fs-13 fw-bold text-truncate-1-line">{value.taskName}<span className="ms-2 badge bg-soft-danger text-danger">High</span></div>
+                                                                                <div className="fs-13 fw-bold text-truncate-1-line">{value.taskName}<span className="ms-2 badge bg-soft-danger text-danger">{value.priority}</span></div>
                                                                                 <div className="fs-12 fw-normal text-muted text-truncate-1-line">{value.description}</div>
                                                                             </a>
                                                                         </div>
                                                                     </div>
                                                                     <div className="d-flex flex-shrink-0 align-items-center gap-3">
                                                                         <div className="badge bg-soft-primary text-primary d-md-inline-block d-none">{value.status}</div>
-                                                                        <div className="d-md-inline-block d-none me-3">{value.rangeStart}</div>
+                                                                        <div className="d-md-inline-block d-none me-3">{value.rangeEnd}</div>
                                                                         <div className="avatar-image avatar-md d-sm-inline-block d-none">
                                                                             <img src="assets/images/avatar/1.png" alt="user" className="img-fluid" />
                                                                         </div>
@@ -484,268 +497,13 @@ const AppsTasks = () => {
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                        </ul>
-                                                    );
-                                                })
-                                            }
-                                        </div>
-                                    </div>
-                                    <div className="card stretch stretch-full">
-                                        <a href="javascript:void(0);" className="card-header" data-bs-toggle="collapse" data-bs-target="#tasks_collapse_yesterday">
-                                            <h5 className="mb-0">Yesterday</h5>
-                                        </a>
-                                        <div className="card-body collapse show" id="tasks_collapse_yesterday">
-                                            <ul className="list-unstyled mb-0">
-                                                <li className="single-task-list p-3 mb-3 border border-dashed rounded-3">
-                                                    <div className="d-flex align-items-center justify-content-between">
-                                                        <div className="d-flex align-items-center gap-3 me-3">
-                                                            <div className="custom-control custom-checkbox me-2">
-                                                                <input type="checkbox" className="custom-control-input" id="customCheckTask6" data-checked-action="task-action" />
-                                                                <label className="custom-control-label c-pointer" htmlFor="customCheckTask6" />
-                                                            </div>
-                                                            <div className="d-flex align-items-center gap-3">
-                                                                <div className="lh-base"><i className="feather-star" /></div>
-                                                                <a href="javascript:void(0);" className="single-task-list-link" data-bs-toggle="offcanvas" data-bs-target="#tasksDetailsOffcanvas">
-                                                                    <div className="fs-13 fw-bold text-truncate-1-line">Client objective meeting <span className="ms-2 badge bg-soft-primary text-primary">Normal</span></div>
-                                                                    <div className="fs-12 fw-normal text-muted text-truncate-1-line">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</div>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        <div className="d-flex flex-shrink-0 align-items-center gap-3">
-                                                            <div className="badge bg-soft-success text-success d-md-inline-block d-none">Conferences</div>
-                                                            <div className="d-md-inline-block d-none me-3">22 Nov, 2023</div>
-                                                            <div className="avatar-image avatar-md d-sm-inline-block d-none">
-                                                                <img src="assets/images/avatar/2.png" alt="user" className="img-fluid" />
-                                                            </div>
-                                                            <div className="dropdown">
-                                                                <a href="javascript:void(0);" className="avatar-text avatar-md" data-bs-toggle="dropdown">
-                                                                    <i className="feather-more-vertical" />
-                                                                </a>
-                                                                <div className="dropdown-menu dropdown-menu-end">
-                                                                    <a className="dropdown-item edit-task" href="#">Edit Task</a>
-                                                                    <a className="dropdown-item view-task" href="#">View Task</a>
-                                                                    <a className="dropdown-item delete-task" href="#">Delete Task</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className="single-task-list p-3 mb-3 border border-dashed rounded-3">
-                                                    <div className="d-flex align-items-center justify-content-between">
-                                                        <div className="d-flex align-items-center gap-3">
-                                                            <div className="custom-control custom-checkbox me-2">
-                                                                <input type="checkbox" className="custom-control-input" id="customCheckTask7" data-checked-action="task-action" />
-                                                                <label className="custom-control-label c-pointer" htmlFor="customCheckTask7" />
-                                                            </div>
-                                                            <div className="d-flex align-items-center gap-3">
-                                                                <div className="lh-base"><i className="feather-star" /></div>
-                                                                <a href="javascript:void(0);" className="single-task-list-link" data-bs-toggle="offcanvas" data-bs-target="#tasksDetailsOffcanvas">
-                                                                    <div className="fs-13 fw-bold text-truncate-1-line">Target market trend analysis on the go <span className="ms-2 badge bg-soft-warning text-warning">Medium</span></div>
-                                                                    <div className="fs-12 fw-normal text-muted text-truncate-1-line">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</div>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        <div className="d-flex flex-shrink-0 align-items-center gap-3">
-                                                            <div className="badge bg-soft-teal text-teal d-md-inline-block d-none">Meetings</div>
-                                                            <div className="d-md-inline-block d-none me-3">23 Nov, 2023</div>
-                                                            <div className="avatar-image avatar-md d-sm-inline-block d-none">
-                                                                <img src="assets/images/avatar/3.png" alt="user" className="img-fluid" />
-                                                            </div>
-                                                            <div className="dropdown">
-                                                                <a href="javascript:void(0);" className="avatar-text avatar-md" data-bs-toggle="dropdown">
-                                                                    <i className="feather-more-vertical" />
-                                                                </a>
-                                                                <div className="dropdown-menu dropdown-menu-end">
-                                                                    <a className="dropdown-item edit-task" href="#">Edit Task</a>
-                                                                    <a className="dropdown-item view-task" href="#">View Task</a>
-                                                                    <a className="dropdown-item delete-task" href="#">Delete Task</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className="single-task-list p-3 mb-0 border border-dashed rounded-3">
-                                                    <div className="d-flex align-items-center justify-content-between">
-                                                        <div className="d-flex align-items-center gap-3 me-3">
-                                                            <div className="custom-control custom-checkbox me-2">
-                                                                <input type="checkbox" className="custom-control-input" id="customCheckTask8" data-checked-action="task-action" />
-                                                                <label className="custom-control-label c-pointer" htmlFor="customCheckTask8" />
-                                                            </div>
-                                                            <div className="d-flex align-items-center gap-3">
-                                                                <div className="lh-base"><i className="feather-star" /></div>
-                                                                <a href="javascript:void(0);" className="single-task-list-link" data-bs-toggle="offcanvas" data-bs-target="#tasksDetailsOffcanvas">
-                                                                    <div className="fs-13 fw-bold text-truncate-1-line">Send revised proposal to Mr. Dow Jones <span className="ms-2 badge bg-soft-success text-success">Low</span></div>
-                                                                    <div className="fs-12 fw-normal text-muted text-truncate-1-line">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</div>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        <div className="d-flex flex-shrink-0 align-items-center gap-3">
-                                                            <div className="badge bg-soft-primary text-primary d-md-inline-block d-none">Calls</div>
-                                                            <div className="d-md-inline-block d-none me-3">28 Nov, 2023</div>
-                                                            <div className="avatar-image avatar-md d-sm-inline-block d-none">
-                                                                <img src="assets/images/avatar/4.png" alt="user" className="img-fluid" />
-                                                            </div>
-                                                            <div className="dropdown">
-                                                                <a href="javascript:void(0);" className="avatar-text avatar-md" data-bs-toggle="dropdown">
-                                                                    <i className="feather-more-vertical" />
-                                                                </a>
-                                                                <div className="dropdown-menu dropdown-menu-end">
-                                                                    <a className="dropdown-item edit-task" href="#">Edit Task</a>
-                                                                    <a className="dropdown-item view-task" href="#">View Task</a>
-                                                                    <a className="dropdown-item delete-task" href="#">Delete Task</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
+                                                        )
+                                                    })
+                                                }
                                             </ul>
                                         </div>
                                     </div>
-                                    <div className="card mb-0">
-                                        <a href="javascript:void(0);" className="card-header" data-bs-toggle="collapse" data-bs-target="#tasks_collapse_20_nov">
-                                            <h5 className="mb-0">20 Nov, 2023</h5>
-                                        </a>
-                                        <div className="card-body collapse show" id="tasks_collapse_20_nov">
-                                            <ul className="list-unstyled mb-0">
-                                                <li className="single-task-list p-3 mb-3 border border-dashed rounded-3">
-                                                    <div className="d-flex align-items-center justify-content-between">
-                                                        <div className="d-flex align-items-center gap-3 me-3">
-                                                            <div className="custom-control custom-checkbox me-2">
-                                                                <input type="checkbox" className="custom-control-input" id="customCheckTask9" data-checked-action="task-action" />
-                                                                <label className="custom-control-label c-pointer" htmlFor="customCheckTask9" />
-                                                            </div>
-                                                            <div className="d-flex align-items-center gap-3">
-                                                                <div className="lh-base"><i className="feather-star" /></div>
-                                                                <a href="javascript:void(0);" className="single-task-list-link" data-bs-toggle="offcanvas" data-bs-target="#tasksDetailsOffcanvas">
-                                                                    <div className="fs-13 fw-bold text-truncate-1-line">Target market trend analysis on the go <span className="ms-2 badge bg-soft-warning text-warning">Medium</span></div>
-                                                                    <div className="fs-12 fw-normal text-muted text-truncate-1-line">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</div>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        <div className="d-flex flex-shrink-0 align-items-center gap-3">
-                                                            <div className="badge bg-soft-teal text-teal d-md-inline-block d-none">Meetings</div>
-                                                            <div className="d-md-inline-block d-none me-3">23 Nov, 2023</div>
-                                                            <div className="avatar-image avatar-md d-sm-inline-block d-none">
-                                                                <img src="assets/images/avatar/3.png" alt="user" className="img-fluid" />
-                                                            </div>
-                                                            <div className="dropdown">
-                                                                <a href="javascript:void(0);" className="avatar-text avatar-md" data-bs-toggle="dropdown">
-                                                                    <i className="feather-more-vertical" />
-                                                                </a>
-                                                                <div className="dropdown-menu dropdown-menu-end">
-                                                                    <a className="dropdown-item edit-task" href="#">Edit Task</a>
-                                                                    <a className="dropdown-item view-task" href="#">View Task</a>
-                                                                    <a className="dropdown-item delete-task" href="#">Delete Task</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className="single-task-list p-3 mb-3 border border-dashed rounded-3">
-                                                    <div className="d-flex align-items-center justify-content-between">
-                                                        <div className="d-flex align-items-center gap-3 me-3">
-                                                            <div className="custom-control custom-checkbox me-2">
-                                                                <input type="checkbox" className="custom-control-input" id="customCheckTask10" data-checked-action="task-action" />
-                                                                <label className="custom-control-label c-pointer" htmlFor="customCheckTask10" />
-                                                            </div>
-                                                            <div className="d-flex align-items-center gap-3">
-                                                                <div className="lh-base"><i className="feather-star" /></div>
-                                                                <a href="javascript:void(0);" className="single-task-list-link" data-bs-toggle="offcanvas" data-bs-target="#tasksDetailsOffcanvas">
-                                                                    <div className="fs-13 fw-bold text-truncate-1-line">Send revised proposal to Mr. Dow Jones <span className="ms-2 badge bg-soft-success text-success">Low</span></div>
-                                                                    <div className="fs-12 fw-normal text-muted text-truncate-1-line">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</div>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        <div className="d-flex flex-shrink-0 align-items-center gap-3">
-                                                            <div className="badge bg-soft-primary text-primary d-md-inline-block d-none">Calls</div>
-                                                            <div className="d-md-inline-block d-none me-3">28 Nov, 2023</div>
-                                                            <div className="avatar-image avatar-md d-sm-inline-block d-none">
-                                                                <img src="assets/images/avatar/4.png" alt="user" className="img-fluid" />
-                                                            </div>
-                                                            <div className="dropdown">
-                                                                <a href="javascript:void(0);" className="avatar-text avatar-md" data-bs-toggle="dropdown">
-                                                                    <i className="feather-more-vertical" />
-                                                                </a>
-                                                                <div className="dropdown-menu dropdown-menu-end">
-                                                                    <a className="dropdown-item edit-task" href="#">Edit Task</a>
-                                                                    <a className="dropdown-item view-task" href="#">View Task</a>
-                                                                    <a className="dropdown-item delete-task" href="#">Delete Task</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className="single-task-list p-3 mb-3 border border-dashed rounded-3">
-                                                    <div className="d-flex align-items-center justify-content-between">
-                                                        <div className="d-flex align-items-center gap-3 me-3">
-                                                            <div className="custom-control custom-checkbox me-2">
-                                                                <input type="checkbox" className="custom-control-input" id="customCheckTask11" data-checked-action="task-action" />
-                                                                <label className="custom-control-label c-pointer" htmlFor="customCheckTask11" />
-                                                            </div>
-                                                            <div className="d-flex align-items-center gap-3">
-                                                                <div className="lh-base"><i className="feather-star" /></div>
-                                                                <a href="javascript:void(0);" className="single-task-list-link" data-bs-toggle="offcanvas" data-bs-target="#tasksDetailsOffcanvas">
-                                                                    <div className="fs-13 fw-bold text-truncate-1-line">Client objective meeting <span className="ms-2 badge bg-soft-primary text-primary">Normal</span></div>
-                                                                    <div className="fs-12 fw-normal text-muted text-truncate-1-line">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</div>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        <div className="d-flex flex-shrink-0 align-items-center gap-3">
-                                                            <div className="badge bg-soft-success text-success d-md-inline-block d-none">Conferences</div>
-                                                            <div className="d-md-inline-block d-none me-3">22 Nov, 2023</div>
-                                                            <div className="avatar-image avatar-md d-sm-inline-block d-none">
-                                                                <img src="assets/images/avatar/2.png" alt="user" className="img-fluid" />
-                                                            </div>
-                                                            <div className="dropdown">
-                                                                <a href="javascript:void(0);" className="avatar-text avatar-md" data-bs-toggle="dropdown">
-                                                                    <i className="feather-more-vertical" />
-                                                                </a>
-                                                                <div className="dropdown-menu dropdown-menu-end">
-                                                                    <a className="dropdown-item edit-task" href="#">Edit Task</a>
-                                                                    <a className="dropdown-item view-task" href="#">View Task</a>
-                                                                    <a className="dropdown-item delete-task" href="#">Delete Task</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li className="single-task-list p-3 mb-0 border border-dashed rounded-3">
-                                                    <div className="d-flex align-items-center justify-content-between">
-                                                        <div className="d-flex align-items-center gap-3 me-3">
-                                                            <div className="custom-control custom-checkbox me-2">
-                                                                <input type="checkbox" className="custom-control-input" id="customCheckTask12" data-checked-action="task-action" />
-                                                                <label className="custom-control-label c-pointer" htmlFor="customCheckTask12" />
-                                                            </div>
-                                                            <div className="d-flex align-items-center gap-3">
-                                                                <div className="lh-base"><i className="feather-star" /></div>
-                                                                <a href="javascript:void(0);" className="single-task-list-link" data-bs-toggle="offcanvas" data-bs-target="#tasksDetailsOffcanvas">
-                                                                    <div className="fs-13 fw-bold text-truncate-1-line">Video conference with Canada Team <span className="ms-2 badge bg-soft-danger text-danger">High</span></div>
-                                                                    <div className="fs-12 fw-normal text-muted text-truncate-1-line">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</div>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        <div className="d-flex flex-shrink-0 align-items-center gap-3">
-                                                            <div className="badge bg-soft-warning text-warning d-md-inline-block d-none">Meeting</div>
-                                                            <div className="d-md-inline-block d-none me-3">27 Nov, 2023</div>
-                                                            <div className="avatar-image avatar-md d-sm-inline-block d-none">
-                                                                <img src="assets/images/avatar/1.png" alt="user" className="img-fluid" />
-                                                            </div>
-                                                            <div className="dropdown">
-                                                                <a href="javascript:void(0);" className="avatar-text avatar-md" data-bs-toggle="dropdown">
-                                                                    <i className="feather-more-vertical" />
-                                                                </a>
-                                                                <div className="dropdown-menu dropdown-menu-end">
-                                                                    <a className="dropdown-item edit-task" href="#">Edit Task</a>
-                                                                    <a className="dropdown-item view-task" href="#">View Task</a>
-                                                                    <a className="dropdown-item delete-task" href="#">Delete Task</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                                 {/* [ Footer ] start */}
                                 <footer className="footer">
@@ -805,11 +563,11 @@ const AppsTasks = () => {
                                     <div className="form-group mb-4">
                                         <label className="form-label">Status:</label>
                                         <select className="form-control" name="status" onChange={handleChange} value={task.status || ''} data-select2-selector="status">
-                                            <option value="inprogress" data-bg="bg-primary" selected>Inprogress</option>
+                                            <option value="inprogress" data-bg="bg-primary">Inprogress</option>
                                             <option value="pending" data-bg="bg-secondary">Pending</option>
                                             <option value="completed" data-bg="bg-success">Completed</option>
                                             <option value="rejected" data-bg="bg-danger">Rejected</option>
-                                            <option value="ppcoming" data-bg="bg-warning">Upcoming</option>
+                                            <option value="upcoming" data-bg="bg-warning">Upcoming</option>
                                         </select>
                                     </div>
                                     <div className="form-group mb-4">
@@ -818,14 +576,14 @@ const AppsTasks = () => {
                                             <option value="low" data-bg="bg-primary">Low</option>
                                             <option value="normal" data-bg="bg-teal">Normal</option>
                                             <option value="medium" data-bg="bg-success">Medium</option>
-                                            <option value="high" data-bg="bg-warning" selected>High</option>
+                                            <option value="high" data-bg="bg-warning">High</option>
                                             <option value="urgent" data-bg="bg-danger">Urgent</option>
                                         </select>
                                     </div>
                                     <div className="form-group mb-4">
                                         <label className="form-label">Assignee:</label>
                                         <select className="form-select form-control" data-select2-selector="user" name="user" onChange={handleChange} value={task.user || ''} >
-                                            <option value="alex@outlook.com" data-user={1} selected>alex@outlook.com</option>
+                                            <option value="alex@outlook.com" data-user={1}>alex@outlook.com</option>
                                             <option value="john.deo@outlook.com" data-user={2}>john.deo@outlook.com</option>
                                             <option value="green.cutte@outlook.com" data-user={3}>green.cutte@outlook.com</option>
                                             <option value="nancy.elliot@outlook.com" data-user={4}>nancy.elliot@outlook.com</option>
@@ -845,14 +603,14 @@ const AppsTasks = () => {
                                             <option value="team" data-bg="bg-primary">Team</option>
                                             <option value="primary" data-bg="bg-teal">Primary</option>
                                             <option value="updates" data-bg="bg-success">Updates</option>
-                                            <option value="personal" data-bg="bg-warning" selected>Personal</option>
+                                            <option value="personal" data-bg="bg-warning">Personal</option>
                                             <option value="promotions" data-bg="bg-danger">Promotions</option>
                                             <option value="customs" data-bg="bg-indigo">Customs</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div className="modal-footer">
-                                    <button type="reset" className="btn btn-danger" data-bs-dismiss="modal">Discard</button>
+                                    <button type="button" onClick={handleReset} className="btn btn-danger" data-bs-dismiss="modal">Discard</button>
                                     <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Add Task</button>
                                 </div>
                             </div>
