@@ -1,36 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import 'bootstrap/dist/js/bootstrap.min.js'
-import { Modal } from 'bootstrap'
+import React from 'react'
 
-const AppsTasks = () => {
-
-    const [task, setTask] = useState({});
-    const [list, setList] = useState([]);
-
-    useEffect(() => {
-        let oldList = JSON.parse(localStorage.getItem('task')) || [];
-        setList(oldList);
-    }, [list]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setTask({ ...task, [name]: value });
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        let newList = [...list, { ...task, id: Date.now() }];
-        setList(newList);
-        localStorage.setItem('task', JSON.stringify(newList));
-        setTask({});
-        const modalElement = document.getElementById('addNewTasks');
-        const modalInstance = Modal.getInstance(modalElement);
-        modalInstance.hide();
-    }
-
-    const handleReset = () => {
-        setTask({})
-    }
+const AppsTasks = ({ task, list, handleChange, handleSubmit, handleDelete, handleReset, handleEdit }) => {
 
     return (
         <>
@@ -467,7 +437,7 @@ const AppsTasks = () => {
                                                                 <div className="d-flex align-items-center justify-content-between">
                                                                     <div className="d-flex align-items-center gap-3 me-3">
                                                                         <div className="custom-control custom-checkbox me-2">
-                                                                            <input type="checkbox" className="custom-control-input" id={`customCheckTask${value.id}`} data-checked-action="task-action" />
+                                                                            <input type="checkbox" className="custom-control-input" id={value.id} data-checked-action="task-action" />
                                                                             <label className="custom-control-label c-pointer" htmlFor="customCheckTask1" />
                                                                         </div>
                                                                         <div className="d-flex align-items-center gap-3">
@@ -489,9 +459,10 @@ const AppsTasks = () => {
                                                                                 <i className="feather-more-vertical" />
                                                                             </a>
                                                                             <div className="dropdown-menu dropdown-menu-end">
-                                                                                <a className="dropdown-item edit-task" href="#">Edit Task</a>
+
+                                                                                <button type='button' className="dropdown-item delete-task" data-bs-toggle="modal" data-bs-target="#addNewTasks" onClick={() => handleEdit(value.id)}>Edit Task</button>
                                                                                 <a className="dropdown-item view-task" href="#">View Task</a>
-                                                                                <a className="dropdown-item delete-task" href="#">Delete Task</a>
+                                                                                <button type='button' className="dropdown-item delete-task" onClick={() => handleDelete(value.id)}>Delete Task</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -503,7 +474,7 @@ const AppsTasks = () => {
                                             </ul>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                                 {/* [ Footer ] start */}
                                 <footer className="footer">

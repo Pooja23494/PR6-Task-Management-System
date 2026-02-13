@@ -24,12 +24,8 @@ const Header = () => {
                             <li className="nxl-item nxl-hasmenu">
                                 <Link to="/" className="nxl-link">
                                     <span className="nxl-micon"><i className="feather-airplay" /></span>
-                                    <span className="nxl-mtext">Dashboards</span><span className="nxl-arrow"><i className="feather-chevron-right" /></span>
+                                    <span className="nxl-mtext">Dashboards</span>
                                 </Link>
-                                <ul className="nxl-submenu">
-                                    <li className="nxl-item"><Link className="nxl-link" to="index.html">CRM</Link></li>
-                                    <li className="nxl-item"><Link className="nxl-link" to="analytics.html">Analytics</Link></li>
-                                </ul>
                             </li>
                             <li className="nxl-item nxl-hasmenu">
                                 <Link to="javascript:void(0);" className="nxl-link">
